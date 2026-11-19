@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f7f7"><title>P-drive · Business operations</title>
+  <link rel="stylesheet" href="/styles.css"><script src="/app.js" defer></script><script src="/record-entry.js" defer></script>
+</head>
+<body>
+  <section id="login" class="login-screen" hidden>
+    <div class="login-card"><div class="brand-mark">P<span>.</span></div><p class="eyebrow">BUSINESS OPERATIONS</p><h1>Welcome to P-drive</h1><p class="muted">Sign in to explore the local synthetic demo.</p>
+      <form id="login-form"><label>Demo account<select id="login-user" required></select></label><label>Password<input id="login-password" type="password" value="demo123" autocomplete="current-password" required></label><button class="button primary full" type="submit">Sign in <span>↗</span></button><p id="login-error" class="error" role="alert"></p></form><p class="login-foot">Synthetic records · Local prototype</p>
+    </div>
+  </section>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#dashboard" aria-label="P-drive home"><span class="brand-mark small">P<span>.</span></span><span>P-drive</span></a>
+      <div class="workspace"><span class="workspace-icon">N</span><span><b>Northstar Pharma</b><small>Demo workspace</small></span><span class="chevron">⌄</span></div>
+      <p class="nav-label">WORKSPACE</p>
+      <nav id="nav">
+        <a class="nav-item active" href="#dashboard" data-view="dashboard"><span>◫</span>Overview</a>
+        <a class="nav-item" href="#products" data-view="products"><span>▤</span>Products</a>
+        <a class="nav-item" href="#customers" data-view="customers"><span>♧</span>Customers</a>
+        <a class="nav-item" href="#orders" data-view="orders"><span>▧</span>Orders</a>
+        <a class="nav-item" href="#tasks" data-view="tasks"><span>✓</span>Workflows <i id="task-badge" class="nav-badge"></i></a>
+        <a class="nav-item" href="#documents" data-view="documents"><span>▱</span>Documents</a>
+        <a class="nav-item" href="#reports" data-view="reports"><span>◴</span>Reports</a>
+        <a class="nav-item" href="#automations" data-view="automations"><span>⟳</span>Automations</a>
+      </nav>
+      <div class="sidebar-bottom"><div class="storage-note"><span class="tiny-dot"></span><span>Local demo data<br><small>Stored on this computer</small></span></div><button class="nav-item" id="help-button"><span>?</span>About this demo</button></div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><div class="breadcrumbs"><span>Northstar Pharma</span><b>/</b><strong id="crumb">Overview</strong></div><div class="top-actions"><span class="demo-pill"><i></i> DEMO ENVIRONMENT</span><button class="icon-button" id="refresh" aria-label="Refresh data" title="Refresh">↻</button><button class="user-menu" id="user-menu"><span id="avatar" class="avatar">AM</span><span class="user-name"><b id="user-name">Avery Morgan</b><small id="user-role">Administrator</small></span><span>⌄</span></button><button class="button plain" id="logout">Sign out</button></div></header>
+      <div id="notice" role="status" class="notice" hidden></div>
+      <section id="content" class="content" aria-live="polite"></section>
+      <footer class="app-footer"><span>Prototype · Synthetic business data</span><span>Not for patient, clinical, safety, or regulated quality workflows</span></footer>
+    </main>
+  </div>
+  <dialog id="detail-dialog" class="detail-dialog"><div id="detail-content"></div><button class="dialog-close" id="close-detail" aria-label="Close">×</button></dialog>
+  <dialog id="form-dialog" class="form-dialog"><div id="form-content"></div><button class="dialog-close" id="close-form" aria-label="Close">×</button></dialog>
+</body>
+</html>
