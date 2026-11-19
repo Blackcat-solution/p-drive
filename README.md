@@ -1,5 +1,12 @@
 # P-drive
 
+## Try the live demo
+
+Open [p-drive-sigma.vercel.app](https://p-drive-sigma.vercel.app). Select any demo team member and use password `demo123`.
+
+The public catalogue is synthetic, not a complete or verified registry of medicines and manufacturers sold in India. Reorder flags are reminders based only on stock quantities and thresholds entered by the shop. They are not medical guidance or independent purchase recommendations. Do not enter real customer, patient, financial, or other sensitive data; the hosted demo uses temporary storage.
+
+
 A local prototype for pharmaceutical business operations and analytics. It uses synthetic demo data and is not a medical device, clinical decision system, or regulated quality, safety, or regulatory system.
 
 ## Run locally
