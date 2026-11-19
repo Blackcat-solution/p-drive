@@ -23,26 +23,26 @@ function iso(daysAgo = 0) { const d = new Date(); d.setDate(d.getDate() - daysAg
 const seed = {
   version: 1,
   products: [
-    { id: 'prd-101', orgId: 'northstar', name: 'Cardiwell 10', code: 'NS-CW-010', category: 'Cardiovascular', businessUnit: 'Primary care', type: 'Branded', market: 'West', packSize: '10 x 10', unit: 'packs', status: 'Active', owner: 'Taylor Chen', notes: 'Synthetic demo record.' },
-    { id: 'prd-102', orgId: 'northstar', name: 'Gastroline 20', code: 'NS-GL-020', category: 'Gastroenterology', businessUnit: 'Specialty', type: 'Branded', market: 'North', packSize: '10 x 10', unit: 'packs', status: 'Active', owner: 'Taylor Chen', notes: 'Synthetic demo record.' },
-    { id: 'prd-103', orgId: 'northstar', name: 'VitaCore D', code: 'NS-VC-001', category: 'Wellness', businessUnit: 'Consumer health', type: 'Supplement', market: 'South', packSize: '30 tablets', unit: 'bottles', status: 'Review', owner: 'Taylor Chen', notes: 'Synthetic demo record.' },
-    { id: 'prd-201', orgId: 'harbor', name: 'Harbor Sample A', code: 'HB-SA-001', category: 'General', businessUnit: 'Demo', type: 'Generic', market: 'East', packSize: '10 units', unit: 'packs', status: 'Active', owner: 'Morgan Ellis', notes: 'Separate-organization fixture.' }
+    { id: 'prd-101', orgId: 'northstar', name: 'Cardiwell 10', code: 'NS-CW-010', category: 'Cardiovascular', businessUnit: 'Primary care', type: 'Branded', market: 'Maharashtra', packSize: '10 strips x 10 tablets', unit: 'cartons', hsnCode: '3004', mrp: 145, status: 'Active', owner: 'Taylor Chen', notes: 'Synthetic demo record.' },
+    { id: 'prd-102', orgId: 'northstar', name: 'Gastroline 20', code: 'NS-GL-020', category: 'Gastroenterology', businessUnit: 'Specialty', type: 'Branded', market: 'Karnataka', packSize: '10 strips x 10 tablets', unit: 'cartons', hsnCode: '3004', mrp: 132, status: 'Active', owner: 'Taylor Chen', notes: 'Synthetic demo record. HSN and MRP are examples; verify before billing.' },
+    { id: 'prd-103', orgId: 'northstar', name: 'VitaCore D', code: 'NS-VC-001', category: 'Wellness', businessUnit: 'Consumer health', type: 'Supplement', market: 'Telangana', packSize: '30 tablets', unit: 'bottles', hsnCode: '', mrp: 220, status: 'Review', owner: 'Taylor Chen', notes: 'Synthetic demo record.' },
+    { id: 'prd-201', orgId: 'harbor', name: 'Harbor Sample A', code: 'HB-SA-001', category: 'General', businessUnit: 'Demo', type: 'Generic', market: 'Delhi', packSize: '10 units', unit: 'cartons', hsnCode: '', mrp: 100, status: 'Active', owner: 'Morgan Ellis', notes: 'Separate-organization fixture.' }
   ],
   customers: [
-    { id: 'cus-101', orgId: 'northstar', name: 'Meridian Wholesale', type: 'Distributor', territory: 'West', owner: 'Sam Rivera', email: 'orders@meridian.example', phone: '+1 555 0101', status: 'Active', notes: 'Synthetic demo account.' },
-    { id: 'cus-102', orgId: 'northstar', name: 'Cedar Grove Pharmacy Group', type: 'Pharmacy', territory: 'West', owner: 'Sam Rivera', email: 'buying@cedargrove.example', phone: '+1 555 0102', status: 'Active', notes: 'Synthetic demo account.' },
-    { id: 'cus-103', orgId: 'northstar', name: 'Northwind Hospital Supply', type: 'Hospital', territory: 'North', owner: 'Avery Morgan', email: 'supply@northwind.example', phone: '+1 555 0103', status: 'Active', notes: 'Synthetic demo account.' },
-    { id: 'cus-104', orgId: 'northstar', name: 'Sundale Distribution', type: 'Wholesaler', territory: 'South', owner: 'Sam Rivera', email: 'team@sundale.example', phone: '+1 555 0104', status: 'Active', notes: 'Synthetic demo account.' },
-    { id: 'cus-201', orgId: 'harbor', name: 'Harbor Test Account', type: 'Distributor', territory: 'East', owner: 'Morgan Ellis', email: 'ops@harbor.example', phone: '+1 555 0201', status: 'Active', notes: 'Separate-organization fixture.' }
+    { id: 'cus-101', orgId: 'northstar', name: 'Meridian Medical Distributors', type: 'Distributor', territory: 'Mumbai, Maharashtra', owner: 'Sam Rivera', email: 'orders@meridian.example', phone: '+91 00000 00101', state: 'Maharashtra', city: 'Mumbai', pincode: '400001', gstin: '', status: 'Active', notes: 'Synthetic demo account.' },
+    { id: 'cus-102', orgId: 'northstar', name: 'Cedar Grove Pharmacy', type: 'Pharmacy', territory: 'Pune, Maharashtra', owner: 'Sam Rivera', email: 'buying@cedargrove.example', phone: '+91 00000 00102', state: 'Maharashtra', city: 'Pune', pincode: '411001', gstin: '', status: 'Active', notes: 'Synthetic demo account.' },
+    { id: 'cus-103', orgId: 'northstar', name: 'Northwind Hospital Pharmacy', type: 'Hospital', territory: 'Hyderabad, Telangana', owner: 'Avery Morgan', email: 'supply@northwind.example', phone: '+91 00000 00103', state: 'Telangana', city: 'Hyderabad', pincode: '500001', gstin: '', status: 'Active', notes: 'Synthetic demo account.' },
+    { id: 'cus-104', orgId: 'northstar', name: 'Sundale Retail Chemists', type: 'Retail pharmacy', territory: 'Bengaluru, Karnataka', owner: 'Sam Rivera', email: 'team@sundale.example', phone: '+91 00000 00104', state: 'Karnataka', city: 'Bengaluru', pincode: '560001', gstin: '', status: 'Active', notes: 'Synthetic demo account.' },
+    { id: 'cus-201', orgId: 'harbor', name: 'Harbor Test Account', type: 'Distributor', territory: 'Delhi, Delhi', owner: 'Morgan Ellis', email: 'ops@harbor.example', phone: '+91 00000 00201', state: 'Delhi', city: 'Delhi', pincode: '110001', gstin: '', status: 'Active', notes: 'Separate-organization fixture.' }
   ],
   orders: [
     ['ord-1001','cus-101','prd-101',5,1040,105], ['ord-1002','cus-102','prd-101',3,624,85], ['ord-1003','cus-101','prd-102',4,920,75],
     ['ord-1004','cus-103','prd-101',6,1248,60], ['ord-1005','cus-104','prd-103',8,480,48], ['ord-1006','cus-101','prd-101',7,1456,35],
     ['ord-1007','cus-102','prd-102',2,460,28], ['ord-1008','cus-103','prd-101',4,832,21], ['ord-1009','cus-104','prd-103',5,300,14],
     ['ord-1010','cus-101','prd-102',3,690,8], ['ord-1011','cus-102','prd-101',2,416,4]
-  ].map(([id,customerId,productId,quantity,value,days], i) => ({ id, orgId: 'northstar', customerId, productId, orderDate: iso(days), quantity, unit: 'packs', value, currency: 'USD', status: i === 10 ? 'Processing' : 'Completed', reference: `DEMO-${id.slice(-4)}` })).concat([
-    { id:'ord-1012',orgId:'northstar',customerId:'cus-103',productId:'prd-102',orderDate:iso(12),quantity:10,unit:'packs',value:2300,currency:'USD',status:'Cancelled',reference:'DEMO-1012' },
-    { id:'ord-201',orgId:'harbor',customerId:'cus-201',productId:'prd-201',orderDate:iso(10),quantity:2,unit:'packs',value:100,currency:'USD',status:'Completed',reference:'HARBOR-0201' }
+  ].map(([id,customerId,productId,quantity,value,days], i) => ({ id, orgId: 'northstar', customerId, productId, orderDate: iso(days), quantity, unit: 'cartons', value: value * 100, currency: 'INR', status: i === 10 ? 'Processing' : 'Completed', reference: `DEMO-${id.slice(-4)}` })).concat([
+    { id:'ord-1012',orgId:'northstar',customerId:'cus-103',productId:'prd-102',orderDate:iso(12),quantity:10,unit:'cartons',value:230000,currency:'INR',status:'Cancelled',reference:'DEMO-1012' },
+    { id:'ord-201',orgId:'harbor',customerId:'cus-201',productId:'prd-201',orderDate:iso(10),quantity:2,unit:'cartons',value:10000,currency:'INR',status:'Completed',reference:'HARBOR-0201' }
   ]),
   tasks: [
     { id:'tsk-101',orgId:'northstar',title:'Confirm West territory reorder outlook',description:'Review the last quarter and record account follow-ups.',status:'In progress',priority:'High',dueDate:iso(-2),owner:'Sam Rivera',relatedType:'customer',relatedId:'cus-101',createdBy:'Jordan Lee' },
@@ -111,7 +111,7 @@ function getUser(req) {
 const permissions = {
   read: new Set(roles),
   write: new Set(['Administrator','Business manager','Sales','Operations']),
-  customers: new Set(['Administrator','Business manager','Sales','Compliance']),
+  customers: new Set(['Administrator','Business manager','Sales','Operations','Compliance']),
   orders: new Set(['Administrator','Business manager','Sales','Operations','Compliance']),
   admin: new Set(['Administrator'])
 };
@@ -233,18 +233,23 @@ async function handler(req, res) {
           if(record.relatedId&&!visible(linkedCollection,user).some(r=>r.id===record.relatedId))return json(res,400,{error:'The related record is not available in this organization.'});
         } else if(key==='products') {
           const name=text(input.name,100), code=text(input.code,50); if(!name||!code)return json(res,400,{error:'Product name and identifier are required.'});
-          record={id:`prd-${randomBytes(5).toString('hex')}`,orgId:user.orgId,name,code,category:text(input.category,80),businessUnit:text(input.businessUnit,80),type:text(input.type,50),market:text(input.market,50),packSize:text(input.packSize,50),unit:text(input.unit,30),status:pick(input.status,['Active','Review','Inactive'],'Review'),owner:text(input.owner,80)||user.name,notes:text(input.notes,1000)};
+          const mrp=input.mrp===''||input.mrp==null?null:Number(input.mrp);
+          if(mrp!==null&&(!Number.isFinite(mrp)||mrp<0||mrp>10000000))return json(res,400,{error:'Enter a valid MRP of ₹0 or more.'});
+          record={id:`prd-${randomBytes(5).toString('hex')}`,orgId:user.orgId,name,code,category:text(input.category,80),businessUnit:text(input.businessUnit,80),type:text(input.type,50),market:text(input.market,50),packSize:text(input.packSize,50),unit:text(input.unit,30),hsnCode:text(input.hsnCode,12),mrp,status:pick(input.status,['Active','Review','Inactive'],'Review'),owner:text(input.owner,80)||user.name,notes:text(input.notes,1000)};
         } else if(key==='customers') {
           const name=text(input.name,120); if(!name)return json(res,400,{error:'Customer or account name is required.'});
           const email=text(input.email,160); if(email&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return json(res,400,{error:'Enter a valid business email address.'});
-          record={id:`cus-${randomBytes(5).toString('hex')}`,orgId:user.orgId,name,type:pick(input.type,['Distributor','Wholesaler','Pharmacy','Hospital','Clinic','Other'],'Other'),territory:text(input.territory,60),owner:user.role==='Sales'?user.name:(text(input.owner,80)||user.name),email,phone:text(input.phone,40),status:'Active',notes:text(input.notes,1000)};
+          const gstin=text(input.gstin,15).toUpperCase(), pincode=text(input.pincode,6);
+          if(gstin&&!/^\d{2}[A-Z0-9]{13}$/.test(gstin))return json(res,400,{error:'Enter a 15-character GSTIN or leave it blank.'});
+          if(pincode&&!/^[1-9]\d{5}$/.test(pincode))return json(res,400,{error:'Enter a valid 6-digit Indian PIN code.'});
+          record={id:`cus-${randomBytes(5).toString('hex')}`,orgId:user.orgId,name,type:pick(input.type,['Distributor','Wholesaler','Stockist','Super stockist','Pharmacy','Retail pharmacy','Hospital','Clinic','Other'],'Other'),territory:text(input.territory,80),state:text(input.state,50),city:text(input.city,60),pincode,gstin,owner:user.role==='Sales'?user.name:(text(input.owner,80)||user.name),email,phone:text(input.phone,40),status:'Active',notes:text(input.notes,1000)};
         } else if(key==='orders') {
           const customer=visible('customers',user).find(c=>c.id===text(input.customerId,80));
           const product=visible('products',user).find(p=>p.id===text(input.productId,80));
           const quantity=Number(input.quantity), value=Number(input.value||0);
           if(!customer||!product)return json(res,400,{error:'Choose a customer and product available in your organization.'});
           if(!Number.isFinite(quantity)||quantity<=0||quantity>1000000||!Number.isFinite(value)||value<0||value>1000000000)return json(res,400,{error:'Quantity must be positive and order value must be zero or more.'});
-          record={id:`ord-${randomBytes(5).toString('hex')}`,orgId:user.orgId,customerId:customer.id,productId:product.id,orderDate:date(input.orderDate)||iso(),quantity,unit:text(input.unit,30)||product.unit||'units',value,currency:/^[A-Za-z]{3}$/.test(input.currency||'USD')?String(input.currency||'USD').toUpperCase():'USD',status:pick(input.status,['Processing','Completed','Cancelled','Returned'],'Processing'),reference:text(input.reference,60)||`DEMO-${randomBytes(3).toString('hex').toUpperCase()}`};
+          record={id:`ord-${randomBytes(5).toString('hex')}`,orgId:user.orgId,customerId:customer.id,productId:product.id,orderDate:date(input.orderDate)||iso(),quantity,unit:text(input.unit,30)||product.unit||'cartons',value,currency:'INR',status:pick(input.status,['Processing','Completed','Cancelled','Returned'],'Processing'),reference:text(input.reference,60)||`DEMO-${randomBytes(3).toString('hex').toUpperCase()}`};
         } else return json(res,400,{error:'This record type is read-only in the prototype.'});
         db[collection].unshift(record); audit(user,'created',key==='customers'?'customer':key==='orders'?'order':key.slice(0,-1),record.id,`Created ${record.name||record.title||record.reference}.`); await saveDb();
         const {orgId,...publicRecord}=record; return json(res,201,publicRecord);
