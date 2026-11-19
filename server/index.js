@@ -1,15 +1,16 @@
 import http from 'node:http';
-import { createHash, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, randomBytes, scryptSync, timingSafeEqual } from 'node:crypto';
 import { mkdir, readFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const publicDir = path.join(root, 'public');
-const dataFile = path.resolve(process.env.PDRIVE_DATA_FILE || path.join(root, 'data', 'pdrive.json'));
+const dataFile = path.resolve(process.env.PDRIVE_DATA_FILE || (process.env.VERCEL ? '/tmp/pdrive.json' : path.join(root, 'data', 'pdrive.json')));
 const port = Number(process.env.PORT || 4173);
 const roles = ['Administrator', 'Business manager', 'Sales', 'Operations', 'Compliance'];
-const sessions = new Map();
+if (process.env.VERCEL && !process.env.PDRIVE_SESSION_SECRET) throw new Error('PDRIVE_SESSION_SECRET must be configured for Vercel deployments.');
+const sessionSecret = process.env.PDRIVE_SESSION_SECRET || randomBytes(32).toString('hex');
 const users = roles.map((role, i) => ({
   id: `user-${i + 1}`, name: ['Avery Morgan', 'Jordan Lee', 'Sam Rivera', 'Taylor Chen', 'Casey Patel'][i],
   email: ['avery@northstar.example', 'jordan@northstar.example', 'sam@northstar.example', 'taylor@northstar.example', 'casey@northstar.example'][i],
@@ -71,8 +72,8 @@ async function loadDb() {
     await saveDb(seed); return structuredClone(seed);
   }
 }
-let db = await loadDb();
 let saveChain = Promise.resolve();
+let db = await loadDb();
 function saveDb(next = db) {
   saveChain = saveChain.then(async () => {
     await mkdir(path.dirname(dataFile), { recursive: true });
@@ -87,11 +88,25 @@ function json(res, status, body, extra = {}) {
   res.end(JSON.stringify(body));
 }
 function parseCookies(req) { return Object.fromEntries((req.headers.cookie || '').split(';').map(x => x.trim().split('=').map(decodeURIComponent)).filter(x => x.length === 2)); }
+function createSessionToken(userId, expires) {
+  const payload = Buffer.from(JSON.stringify({ userId, expires })).toString('base64url');
+  const signature = createHmac('sha256', sessionSecret).update(payload).digest('base64url');
+  return `${payload}.${signature}`;
+}
 function getUser(req) {
   const token = parseCookies(req).pdrive_session;
-  const entry = token && sessions.get(token);
-  if (!entry || entry.expires < Date.now()) { if (token) sessions.delete(token); return null; }
-  return users.find(u => u.id === entry.userId) || null;
+  if (!token) return null;
+  const [payload, signature, extra] = token.split('.');
+  if (!payload || !signature || extra) return null;
+  const expected = createHmac('sha256', sessionSecret).update(payload).digest();
+  let supplied;
+  try { supplied = Buffer.from(signature, 'base64url'); } catch { return null; }
+  if (supplied.length !== expected.length || !timingSafeEqual(supplied, expected)) return null;
+  try {
+    const entry = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    if (!entry.userId || !Number.isFinite(entry.expires) || entry.expires < Date.now()) return null;
+    return users.find(u => u.id === entry.userId) || null;
+  } catch { return null; }
 }
 const permissions = {
   read: new Set(roles),
@@ -121,6 +136,10 @@ function audit(user, action, type, id, detail) {
   db.audit = db.audit.slice(0, 5000);
 }
 async function bodyJson(req) {
+  if (req.body && typeof req.body === 'object') return req.body;
+  if (typeof req.body === 'string') {
+    try { return JSON.parse(req.body); } catch { throw Object.assign(new Error('Send valid JSON.'), { status:400 }); }
+  }
   let raw = ''; for await (const chunk of req) { raw += chunk; if (raw.length > 100_000) throw Object.assign(new Error('Request is too large.'), { status:413 }); }
   try { return raw ? JSON.parse(raw) : {}; } catch { throw Object.assign(new Error('Send valid JSON.'), { status:400 }); }
 }
@@ -154,7 +173,7 @@ function filterForUser(collection, user) {
   });
 }
 
-const server = http.createServer(async (req, res) => {
+async function handler(req, res) {
   try {
     const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     if (req.method === 'GET' && url.pathname === '/api/demo-users') return json(res,200,users.map(u=>({id:u.id,name:u.name,email:u.email,role:u.role,org:u.orgId==='northstar'?'Northstar Pharma':'Harbor Demo'})));
@@ -163,10 +182,11 @@ const server = http.createServer(async (req, res) => {
       if (!user || typeof data.password !== 'string' || data.password.length > 128) return json(res,401,{error:'Choose a demo account and enter its password.'});
       const supplied = scryptSync(data.password, user.salt, 32); const expected = Buffer.from(user.hash,'hex');
       if (supplied.length !== expected.length || !timingSafeEqual(supplied,expected)) return json(res,401,{error:'That password did not match.'});
-      const token = randomBytes(32).toString('hex'); sessions.set(token,{userId:user.id,expires:Date.now()+8*60*60*1000});
-      return json(res,200,{user:safeUser(user)},{'Set-Cookie':`pdrive_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800`});
+      const token = createSessionToken(user.id,Date.now()+8*60*60*1000);
+      const secure = process.env.VERCEL || req.headers['x-forwarded-proto'] === 'https' ? '; Secure' : '';
+      return json(res,200,{user:safeUser(user)},{'Set-Cookie':`pdrive_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=28800${secure}`});
     }
-    if (url.pathname === '/api/logout' && req.method === 'POST') { const token=parseCookies(req).pdrive_session; if(token)sessions.delete(token); return json(res,200,{ok:true},{'Set-Cookie':'pdrive_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'}); }
+    if (url.pathname === '/api/logout' && req.method === 'POST') { const secure = process.env.VERCEL || req.headers['x-forwarded-proto'] === 'https' ? '; Secure' : ''; return json(res,200,{ok:true},{'Set-Cookie':`pdrive_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0${secure}`}); }
     if (url.pathname.startsWith('/api/')) {
       const user = getUser(req); if (!user) return json(res,401,{error:'Sign in to continue.'});
       if (req.method === 'GET' && url.pathname === '/api/me') return json(res,200,{user:safeUser(user)});
@@ -245,5 +265,11 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200,{'Content-Type':`${type}; charset=utf-8`,'X-Content-Type-Options':'nosniff','Referrer-Policy':'same-origin','Content-Security-Policy':"default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'"});
     if(req.method==='HEAD')res.end();else res.end(content);
   } catch (e) { console.error('Request failed:',e.message); if(!res.headersSent)json(res,e.status||500,{error:e.status?e.message:'The request could not be completed.'});else res.destroy(); }
-});
-server.listen(port,()=>console.log(`P-drive prototype listening at http://localhost:${port} (data: ${dataFile})`));
+}
+
+export default handler;
+
+if (!process.env.VERCEL) {
+  const server = http.createServer(handler);
+  server.listen(port,()=>console.log(`P-drive prototype listening at http://localhost:${port} (data: ${dataFile})`));
+}
