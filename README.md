@@ -14,6 +14,12 @@ Open [http://localhost:4173](http://localhost:4173). For the demo, select any li
 
 The app reads `PORT` and `PDRIVE_DATA_FILE` from the process environment. `.env.example` documents these optional settings; Node does not load that file automatically.
 
+## Vercel demo deployment
+
+The repository includes a Vercel serverless API route. Import `Blackcat-solution/p-drive` from [vercel.com/new](https://vercel.com/new), keep the project root at `.`, and set `PDRIVE_SESSION_SECRET` to a long random value in the project's environment variables before deploying. Vercel serves the files in `public/` and routes `/api/*` through the serverless function.
+
+This is a public demo only. Vercel function storage under `/tmp` is temporary and isolated per function instance; record changes may disappear after a cold start and are not shared reliably between instances. The demo accounts and password are public. Do not enter real customer, patient, financial, or other sensitive information. Use a persistent database and managed identity before any shared or production deployment.
+
 ## What is included
 
 - Dashboard with sales, repeat-purchase, product indicators, activity, and overdue work.
@@ -27,13 +33,14 @@ The app reads `PORT` and `PDRIVE_DATA_FILE` from the process environment. `.env.
 
 ## Data and security boundaries
 
-Records are stored in `data/pdrive.json` on the machine running the server. The file is created on first run and is ignored by Git. Back it up and restrict filesystem access if you use the demo with any non-synthetic information. This single-file JSON store is not suitable for production, concurrent use, high availability, regulated records, or a backup/recovery commitment. It has no encryption-at-rest, secure multi-user session store, external identity provider, or deployment hardening. Use HTTPS and a reviewed database, identity, secrets, retention, access-monitoring, backup, and recovery design before any real business deployment.
+Locally, records are stored in `data/pdrive.json` on the machine running the server. On Vercel, the demo uses temporary `/tmp` storage; records are not durable or shared across function instances. Back up local demo data if needed and restrict filesystem access if you use any non-synthetic information. This single-file JSON store is not suitable for production, concurrent use, high availability, regulated records, or a backup/recovery commitment. The app has no production identity provider, durable cloud database, or deployment hardening. Use HTTPS and a reviewed database, identity, secrets, retention, access-monitoring, backup, and recovery design before any real business deployment.
 
 All sample records and identities are fictional. Do not enter patient-identifiable information or sensitive health data. Do not use the prototype for prescribing, patient safety, pharmacovigilance, regulated quality workflows, or approvals. No legal, regulatory, GxP, HIPAA, GDPR, or other certification is claimed. Qualified security, privacy, legal, quality, and regulatory professionals should review any production design.
 
 ## Architecture
 
-- `server/index.js`: Node HTTP server, login/session handling, API authorization, input validation, persistence, audit events, and business calculations.
+- `server/index.js`: shared API handler and local Node HTTP server, login/session handling, API authorization, input validation, persistence, audit events, and business calculations.
+- `api/[...path].js`: Vercel serverless API entry point for `/api/*`.
 - `public/`: responsive single-page interface, styles, and client-side navigation.
 - `data/`: local JSON persistence created at runtime.
 
